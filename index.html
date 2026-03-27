@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#003594" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="WJ Ulm" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <link rel="apple-touch-icon" sizes="120x120" href="apple-touch-icon-120.png" />
+  <link rel="apple-touch-icon" sizes="152x152" href="apple-touch-icon-152.png" />
+  <link rel="apple-touch-icon" sizes="167x167" href="apple-touch-icon-167.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+  <title>WJ Ulm / Neu-Ulm</title>
+  <link rel="manifest" href="manifest.json" />
+  <link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;700&family=Bitter:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      /* WJD Corporate Colors */
+      --blue:    #003594;
+      --teal:    #47D7AC;
+      --red:     #F9423A;
+      --yellow:  #FFB81C;
+      --gray:    #A2AAAD;
+      --white:   #FFFFFF;
+
+      /* UI */
+      --bg:      #F2F5FA;
+      --card:    #FFFFFF;
+      --text:    #0D1B2A;
+      --muted:   #5A6A80;
+      --border:  rgba(0,53,148,0.1);
+      --blue-10: rgba(0,53,148,0.07);
+      --teal-15: rgba(71,215,172,0.15);
+
+      --r:       16px;
+      --r-sm:    11px;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bot: env(safe-area-inset-bottom, 0px);
+    }
+
+    html, body { height: 100%; overflow: hidden; background: var(--blue); }
+    body {
+      font-family: 'Bitter', Georgia, serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    #app {
+      display: flex; flex-direction: column;
+      height: 100vh; height: 100dvh;
+      background: var(--bg);
+    }
+
+    /* ── HEADER ── */
+    #header {
+      background: var(--blue);
+      padding: calc(var(--safe-top) + 12px) 18px 12px;
+      display: flex; align-items: center; gap: 12px;
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+    }
+    /* teal accent line at bottom of header */
+    #header::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 3px; background: var(--teal);
+    }
+
+    #logo-svg { height: 28px; width: auto; flex-shrink: 0; }
+    #hdr-sep  { width: 1px; height: 22px; background: rgba(255,255,255,0.2); }
+    #hdr-right { flex: 1; }
+    #hdr-title {
+      color: #fff;
+      font-family: 'Chivo', sans-serif;
+      font-size: 14px; font-weight: 700; line-height: 1;
+      letter-spacing: 0.1px;
+    }
+    #hdr-sub { color: var(--teal); font-family: 'Bitter', serif; font-size: 10px; margin-top: 3px; letter-spacing: 0.3px; }
+
+    /* ── SCROLL ── */
+    #scroll {
+      flex: 1; overflow-y: auto;
+      padding: 18px 16px calc(var(--safe-bot) + 24px);
+    }
+
+    /* ── SECTION LABEL ── */
+    .slabel {
+      font-family: 'Chivo', sans-serif;
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 1px; text-transform: uppercase;
+      color: var(--blue);
+      margin: 20px 0 9px 2px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .slabel::after {
+      content: ''; flex: 1; height: 2px;
+      background: var(--teal); border-radius: 1px;
+    }
+
+    /* ── 2-COL GRID ── */
+    .grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 10px; margin-bottom: 4px;
+    }
+
+    .tile {
+      background: var(--card);
+      border-radius: var(--r-sm);
+      padding: 15px 14px 13px;
+      border: 1.5px solid var(--border);
+      cursor: pointer; text-align: left;
+      display: flex; flex-direction: column; gap: 10px;
+      transition: transform 0.1s, border-color 0.15s;
+      -webkit-tap-highlight-color: transparent;
+      position: relative; overflow: hidden;
+    }
+    /* teal top-border accent */
+    .tile::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 3px; background: var(--teal);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.2s;
+    }
+    .tile:active { transform: scale(0.95); }
+    .tile:active::before { transform: scaleX(1); }
+
+    .tile-icon {
+      width: 38px; height: 38px; border-radius: 9px;
+      background: var(--teal-15);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .tile-icon svg { width: 19px; height: 19px; }
+
+    .tile-label {
+      font-family: 'Chivo', sans-serif;
+      font-size: 13px; font-weight: 700; color: var(--text);
+      line-height: 1.3;
+    }
+    .tile-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
+
+    /* ── LIST ── */
+    .lcard {
+      background: var(--card);
+      border-radius: var(--r-sm);
+      border: 1.5px solid var(--border);
+      overflow: hidden;
+    }
+
+    .lrow {
+      display: flex; align-items: center; gap: 11px;
+      padding: 12px 14px;
+      border: none; background: none;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer; width: 100%; text-align: left;
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.1s;
+    }
+    .lrow:last-child { border-bottom: none; }
+    .lrow:active { background: var(--teal-15); }
+
+    .licon {
+      width: 34px; height: 34px; border-radius: 8px;
+      background: var(--teal-15);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .licon svg { width: 16px; height: 16px; }
+    /* red accent for external */
+    .licon.ext { background: rgba(249,66,58,0.1); }
+
+    .ltext { flex: 1; }
+    .ltext b {
+      display: block;
+      font-family: 'Chivo', sans-serif;
+      font-size: 13px; font-weight: 700; color: var(--text);
+    }
+    .ltext span { font-size: 11px; color: var(--muted); }
+
+    .lbadge {
+      font-size: 9px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.4px;
+      background: rgba(249,66,58,0.1); color: var(--red);
+      padding: 2px 6px; border-radius: 4px; flex-shrink: 0;
+    }
+
+    .lchev { opacity: 0.35; }
+    .lchev svg { width: 13px; height: 13px; display: block; }
+
+    /* ── FOOTER TAG ── */
+    .footer-tag {
+      text-align: center;
+      font-size: 10px; color: var(--gray);
+      margin-top: 20px; padding-bottom: 4px;
+      letter-spacing: 0.3px;
+    }
+    .footer-tag span {
+      color: var(--teal);
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <!-- HEADER -->
+  <div id="header">
+    <svg id="logo-svg" viewBox="0 0 144.7 107.7" xmlns="http://www.w3.org/2000/svg" fill="white">
+      <path d="M77,102.2V89.4c11.6,5.2,21.2,7.7,29,7.7c4.1,0,7.8-.7,11.1-2c3.4-1.3,6.1-3.6,8-6.7c2-3.2,3-10,3-20.3V12h-27.8V0h44.2v68.4c0,11.1-1.9,19.1-4.9,24c-3,4.9-7.2,8.7-12.6,11.3c-5.4,2.6-12.3,3.9-20.8,3.9C97,107.7,87.1,105.9,77,102.2"/>
+      <path d="M33,23.8h12.7l9.8,36.7l12.1-36.7h10.8l12.3,36.7l9.7-36.7h12.7L97.9,81.3H85.5L73,44.2L60.7,81.3H48.4L33,23.8"/>
+      <path d="M0,0h45v11.9H16.5v77.5H45v12.8H0V0"/>
+    </svg>
+    <div id="hdr-sep"></div>
+    <div id="hdr-right">
+      <div id="hdr-title">Ulm / Neu-Ulm</div>
+      <div id="hdr-sub">Wirtschaftsjunioren</div>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div id="scroll">
+
+    <!-- Schnellzugriff -->
+    <div class="slabel">Schnellzugriff</div>
+    <div class="grid">
+
+      <div class="tile" onclick="go('https://www.vereinonline.org/WJ_UlmNeuUlm/')">
+        <div class="tile-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+        </div>
+        <div><div class="tile-label">Start</div><div class="tile-sub">Übersicht & Neuigkeiten</div></div>
+      </div>
+
+      <div class="tile" onclick="go('https://www.vereinonline.org/WJ_UlmNeuUlm/?module=events')">
+        <div class="tile-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+        </div>
+        <div><div class="tile-label">Kalender</div><div class="tile-sub">Termine & Anmeldung</div></div>
+      </div>
+
+      <div class="tile" onclick="go('https://www.vereinonline.org/WJ_UlmNeuUlm/?action=members_suche')">
+        <div class="tile-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
+        <div><div class="tile-label">Mitglieder</div><div class="tile-sub">Verzeichnis & Suche</div></div>
+      </div>
+
+      <div class="tile" onclick="go('https://www.vereinonline.org/WJ_UlmNeuUlm/?action=members_newsletter&cmd=archiv')">
+        <div class="tile-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+        </div>
+        <div><div class="tile-label">Newsletter</div><div class="tile-sub">Archiv</div></div>
+      </div>
+
+    </div>
+
+    <!-- Mein Bereich -->
+    <div class="slabel">Mein Bereich</div>
+    <div class="lcard">
+
+      <button class="lrow" onclick="go('https://www.vereinonline.org/WJ_UlmNeuUlm/?action=profile_uebersicht')">
+        <div class="licon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+          </svg>
+        </div>
+        <div class="ltext"><b>Mein Profil</b><span>Einstellungen & Daten</span></div>
+        <div class="lchev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></div>
+      </button>
+
+      <button class="lrow" onclick="go('https://www.vereinonline.org/WJ_UlmNeuUlm/ulm_neu-ulm')">
+        <div class="licon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+            <circle cx="12" cy="10" r="3"/>
+          </svg>
+        </div>
+        <div class="ltext"><b>Unser Kreis</b><span>WJ Ulm / Neu-Ulm</span></div>
+        <div class="lchev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></div>
+      </button>
+
+      <button class="lrow" onclick="go('https://www.vereinonline.org/WJ_UlmNeuUlm/vorstand')">
+        <div class="licon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+            <polyline points="12 4 13.5 6.5 16 7 14 9 14.5 11.5 12 10.5 9.5 11.5 10 9 8 7 10.5 6.5 12 4"/>
+          </svg>
+        </div>
+        <div class="ltext"><b>Vorstand</b><span>Ansprechpartner</span></div>
+        <div class="lchev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></div>
+      </button>
+
+      <button class="lrow" onclick="go('https://www.vereinonline.org/WJ_UlmNeuUlm/wj_projekte')">
+        <div class="licon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+        </div>
+        <div class="ltext"><b>Projekte</b><span>Aktionen & Initiativen</span></div>
+        <div class="lchev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></div>
+      </button>
+
+      <button class="lrow" onclick="go('https://www.vereinonline.org/WJ_UlmNeuUlm/?action=data_raum&id=4001')">
+        <div class="licon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+          </svg>
+        </div>
+        <div class="ltext"><b>Dokumente</b><span>Dateien & Protokolle</span></div>
+        <div class="lchev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></div>
+      </button>
+
+    </div>
+
+    <!-- Verband -->
+    <div class="slabel">Verband</div>
+    <div class="lcard">
+
+      <button class="lrow" onclick="go('https://www.wjbw.de/')">
+        <div class="licon ext">
+          <svg viewBox="0 0 144.7 107.7" fill="var(--red)">
+            <path d="M77,102.2V89.4c11.6,5.2,21.2,7.7,29,7.7c4.1,0,7.8-.7,11.1-2c3.4-1.3,6.1-3.6,8-6.7c2-3.2,3-10,3-20.3V12h-27.8V0h44.2v68.4c0,11.1-1.9,19.1-4.9,24c-3,4.9-7.2,8.7-12.6,11.3c-5.4,2.6-12.3,3.9-20.8,3.9C97,107.7,87.1,105.9,77,102.2"/>
+            <path d="M33,23.8h12.7l9.8,36.7l12.1-36.7h10.8l12.3,36.7l9.7-36.7h12.7L97.9,81.3H85.5L73,44.2L60.7,81.3H48.4L33,23.8"/>
+            <path d="M0,0h45v11.9H16.5v77.5H45v12.8H0V0"/>
+          </svg>
+        </div>
+        <div class="ltext"><b>WJ Baden-Württemberg</b><span>wjbw.de</span></div>
+        <div class="lbadge">extern</div>
+        <div class="lchev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></div>
+      </button>
+
+      <button class="lrow" onclick="go('https://www.wjschwaben.de/')">
+        <div class="licon ext">
+          <svg viewBox="0 0 144.7 107.7" fill="var(--red)">
+            <path d="M77,102.2V89.4c11.6,5.2,21.2,7.7,29,7.7c4.1,0,7.8-.7,11.1-2c3.4-1.3,6.1-3.6,8-6.7c2-3.2,3-10,3-20.3V12h-27.8V0h44.2v68.4c0,11.1-1.9,19.1-4.9,24c-3,4.9-7.2,8.7-12.6,11.3c-5.4,2.6-12.3,3.9-20.8,3.9C97,107.7,87.1,105.9,77,102.2"/>
+            <path d="M33,23.8h12.7l9.8,36.7l12.1-36.7h10.8l12.3,36.7l9.7-36.7h12.7L97.9,81.3H85.5L73,44.2L60.7,81.3H48.4L33,23.8"/>
+            <path d="M0,0h45v11.9H16.5v77.5H45v12.8H0V0"/>
+          </svg>
+        </div>
+        <div class="ltext"><b>WJ Schwaben</b><span>wjschwaben.de</span></div>
+        <div class="lbadge">extern</div>
+        <div class="lchev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></div>
+      </button>
+
+      <button class="lrow" onclick="go('https://wjbayern.de/')">
+        <div class="licon ext">
+          <svg viewBox="0 0 144.7 107.7" fill="var(--red)">
+            <path d="M77,102.2V89.4c11.6,5.2,21.2,7.7,29,7.7c4.1,0,7.8-.7,11.1-2c3.4-1.3,6.1-3.6,8-6.7c2-3.2,3-10,3-20.3V12h-27.8V0h44.2v68.4c0,11.1-1.9,19.1-4.9,24c-3,4.9-7.2,8.7-12.6,11.3c-5.4,2.6-12.3,3.9-20.8,3.9C97,107.7,87.1,105.9,77,102.2"/>
+            <path d="M33,23.8h12.7l9.8,36.7l12.1-36.7h10.8l12.3,36.7l9.7-36.7h12.7L97.9,81.3H85.5L73,44.2L60.7,81.3H48.4L33,23.8"/>
+            <path d="M0,0h45v11.9H16.5v77.5H45v12.8H0V0"/>
+          </svg>
+        </div>
+        <div class="ltext"><b>WJ Bayern</b><span>wjbayern.de</span></div>
+        <div class="lbadge">extern</div>
+        <div class="lchev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></div>
+      </button>
+
+      <button class="lrow" onclick="go('https://www.wjd.de/')">
+        <div class="licon ext">
+          <svg viewBox="0 0 144.7 107.7" fill="var(--red)">
+            <path d="M77,102.2V89.4c11.6,5.2,21.2,7.7,29,7.7c4.1,0,7.8-.7,11.1-2c3.4-1.3,6.1-3.6,8-6.7c2-3.2,3-10,3-20.3V12h-27.8V0h44.2v68.4c0,11.1-1.9,19.1-4.9,24c-3,4.9-7.2,8.7-12.6,11.3c-5.4,2.6-12.3,3.9-20.8,3.9C97,107.7,87.1,105.9,77,102.2"/>
+            <path d="M33,23.8h12.7l9.8,36.7l12.1-36.7h10.8l12.3,36.7l9.7-36.7h12.7L97.9,81.3H85.5L73,44.2L60.7,81.3H48.4L33,23.8"/>
+            <path d="M0,0h45v11.9H16.5v77.5H45v12.8H0V0"/>
+          </svg>
+        </div>
+        <div class="ltext"><b>WJ Deutschland</b><span>wjd.de</span></div>
+        <div class="lbadge">extern</div>
+        <div class="lchev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></div>
+      </button>
+
+    </div>
+
+    <div class="footer-tag">Wirtschaft, <span>die mehr schafft.</span></div>
+
+  </div>
+</div>
+
+<script>
+  function go(url) { window.open(url, '_blank'); }
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
