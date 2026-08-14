@@ -14,6 +14,16 @@
   <link rel="apple-touch-icon" sizes="167x167" href="apple-touch-icon-167.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
   <title>WJ Ulm / Neu-Ulm</title>
+  <script>
+    /* Muss VOR dem Rendern laufen, sonst blitzt kurz das helle Schema auf. */
+    (function () {
+      var g;
+      try { g = localStorage.getItem('wj-theme'); } catch (e) { g = null; }
+      var dunkel = g ? g === 'dark'
+                     : window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.setAttribute('data-theme', dunkel ? 'dark' : 'light');
+    })();
+  </script>
   <link rel="manifest" href="manifest.json" />
   <style>
     /* Schriften lokal – die App startet damit auch offline
@@ -128,7 +138,9 @@
       font-family: 'Chivo', sans-serif;
       font-size: 10px; font-weight: 700;
       letter-spacing: 1px; text-transform: uppercase;
-      color: var(--blue);
+      /* Gruen statt WJ-Blau. Auf hellem Grund ein abgedunkeltes Gruen,
+         weil das WJ-Teal #47D7AC dort nur 1.7:1 Kontrast haette. */
+      color: #14785C;
       margin: 20px 0 9px 2px;
       display: flex; align-items: center; gap: 8px;
     }
@@ -254,24 +266,48 @@
     }
 
     /* Dunkles Schema – WJ-Blau bleibt Akzent, Flaechen werden dunkel */
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg:      #0B1220;
-        --card:    #151E2E;
-        --text:    #E8EDF5;
-        --muted:   #9AA9BF;
-        --border:  rgba(71,215,172,0.16);
-        --blue-10: rgba(71,215,172,0.10);
-        --teal-15: rgba(71,215,172,0.18);
-      }
-      html, body { background: #060B14; }
-      #header { background: #071026; }
-      .tile, .lcard { box-shadow: 0 1px 3px rgba(0,0,0,0.4); }
-      .lbadge { background: rgba(249,66,58,0.18); }
-      /* Icon-Konturen sind var(--blue) – auf dunklem Grund zu kontrastarm */
-      .tile-icon svg, .licon:not(.ext) svg { stroke: #fff; }
-      .tdate { background: #12294F; }
+    /* Dunkles Schema – gesteuert ueber data-theme am <html>.
+       Den Wert setzt das Inline-Script im <head> (System-Einstellung oder
+       gespeicherte Wahl), der Kopfzeilen-Button schaltet ihn um. */
+    html[data-theme='dark'] {
+      --bg:      #1E2942;
+      --card:    #2B3852;
+      --text:    #E8EDF5;
+      --muted:   #AFBED4;
+      --border:  rgba(255,255,255,0.13);
+      --blue-10: rgba(71,215,172,0.10);
+      --teal-15: rgba(71,215,172,0.18);
+      color-scheme: dark;
+      background: #1A2439;
     }
+    html[data-theme='dark'] body      { background: #1A2439; }
+    html[data-theme='dark'] #header   { background: #16294D; }
+    /* Abschnittsueberschriften sind hell auf WJ-Blau nicht lesbar -> Teal */
+    html[data-theme='dark'] .slabel   { color: #47D7AC; }
+    html[data-theme='dark'] .tile,
+    html[data-theme='dark'] .lcard    { box-shadow: 0 1px 3px rgba(0,0,0,0.4); }
+    html[data-theme='dark'] .lbadge   { background: rgba(249,66,58,0.18); }
+    /* Icon-Konturen sind var(--blue) – auf dunklem Grund zu kontrastarm */
+    html[data-theme='dark'] .tile-icon svg,
+    html[data-theme='dark'] .licon:not(.ext) svg { stroke: #fff; }
+    html[data-theme='dark'] .tdate    { background: #1D3A6B; }
+
+    /* Umschalter in der Kopfzeile */
+    #themebtn {
+      flex-shrink: 0; width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid rgba(255,255,255,0.22);
+      background: rgba(255,255,255,0.08);
+      border-radius: 10px; cursor: pointer; padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.15s, transform 0.1s;
+    }
+    #themebtn:active { transform: scale(0.92); background: rgba(255,255,255,0.16); }
+    #themebtn svg { width: 18px; height: 18px; stroke: #fff; fill: none;
+                    stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+    #themebtn .icon-sun  { display: none; }
+    html[data-theme='dark'] #themebtn .icon-sun  { display: block; }
+    html[data-theme='dark'] #themebtn .icon-moon { display: none; }
   </style>
 </head>
 <body>
@@ -289,6 +325,15 @@
       <div id="hdr-title">Ulm / Neu-Ulm</div>
       <div id="hdr-sub">Wirtschaftsjunioren</div>
     </div>
+    <button id="themebtn" type="button" aria-label="Hell/Dunkel umschalten" title="Hell/Dunkel umschalten">
+      <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>
+      </svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="4.2"/>
+        <path d="M12 2v2M12 20v2M4.9 4.9l1.5 1.5M17.6 17.6l1.5 1.5M2 12h2M20 12h2M4.9 19.1l1.5-1.5M17.6 6.4l1.5-1.5"/>
+      </svg>
+    </button>
   </div>
 
   <!-- CONTENT -->
@@ -560,6 +605,41 @@
         document.getElementById('termine-sec').style.display = 'block';
       })
       .catch(function () { /* keine Termine verfuegbar - Block bleibt aus */ });
+  })();
+
+  /* ── Hell/Dunkel umschalten ──
+     Ohne gespeicherte Wahl folgt die App der Systemeinstellung; ab dem
+     ersten Klick gilt die manuelle Wahl (in localStorage gemerkt). */
+  (function () {
+    var html = document.documentElement;
+    var btn  = document.getElementById('themebtn');
+    var meta = document.querySelector('meta[name="theme-color"]');
+    var FARBE = { light: '#003594', dark: '#16294D' };
+
+    function anwenden(theme, merken) {
+      html.setAttribute('data-theme', theme);
+      if (meta) meta.setAttribute('content', FARBE[theme]);
+      if (btn) btn.setAttribute('aria-pressed', String(theme === 'dark'));
+      if (merken) { try { localStorage.setItem('wj-theme', theme); } catch (e) {} }
+    }
+
+    anwenden(html.getAttribute('data-theme') === 'dark' ? 'dark' : 'light', false);
+
+    if (btn) {
+      btn.addEventListener('click', function () {
+        anwenden(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark', true);
+      });
+    }
+
+    // Systemwechsel weiterhin folgen, solange nichts manuell gewaehlt wurde
+    var mq = window.matchMedia('(prefers-color-scheme: dark)');
+    var hoeren = function (e) {
+      var gewaehlt = null;
+      try { gewaehlt = localStorage.getItem('wj-theme'); } catch (err) {}
+      if (!gewaehlt) anwenden(e.matches ? 'dark' : 'light', false);
+    };
+    if (mq.addEventListener) mq.addEventListener('change', hoeren);
+    else if (mq.addListener) mq.addListener(hoeren);
   })();
 
   /* ── Service Worker ── */
