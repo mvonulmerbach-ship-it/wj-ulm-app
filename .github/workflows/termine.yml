@@ -1,0 +1,40 @@
+name: Termine aktualisieren
+
+# Laeuft NICHT automatisch, sondern nur auf Knopfdruck:
+# GitHub -> Reiter "Actions" -> "Termine aktualisieren" -> "Run workflow"
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: termine
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Python bereitstellen
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Kalender holen und termine.json schreiben
+        run: python3 tools/ics2json.py
+
+      - name: Aenderung committen
+        run: |
+          if git diff --quiet -- termine.json; then
+            echo "termine.json unveraendert - nichts zu committen"
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add termine.json
+          git commit -m "Termine aktualisiert (VereinOnline-Kalender)"
+          git push

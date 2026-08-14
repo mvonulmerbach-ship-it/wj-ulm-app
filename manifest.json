@@ -1,8 +1,11 @@
 {
+  "id": "/wj-ulm-app/",
   "name": "WJ Ulm / Neu-Ulm",
   "short_name": "WJ Ulm",
   "description": "Wirtschaftsjunioren Ulm / Neu-Ulm",
+  "lang": "de",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#003594",
   "theme_color": "#003594",
@@ -12,5 +15,28 @@
     { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
     { "src": "icon-192-maskable.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
     { "src": "icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    {
+      "name": "Kalender",
+      "short_name": "Kalender",
+      "description": "Termine und Anmeldung",
+      "url": "./index.html?ziel=kalender",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Mitglieder",
+      "short_name": "Mitglieder",
+      "description": "Verzeichnis und Suche",
+      "url": "./index.html?ziel=mitglieder",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Dokumente",
+      "short_name": "Dokumente",
+      "description": "Dateien und Protokolle",
+      "url": "./index.html?ziel=dokumente",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+    }
   ]
 }
