@@ -1,8 +1,10 @@
 name: Termine aktualisieren
 
-# Laeuft NICHT automatisch, sondern nur auf Knopfdruck:
+# Laeuft automatisch alle 3 Stunden (Zeiten in UTC) und zusaetzlich auf Knopfdruck:
 # GitHub -> Reiter "Actions" -> "Termine aktualisieren" -> "Run workflow"
 on:
+  schedule:
+    - cron: '17 */3 * * *'
   workflow_dispatch:
 
 permissions:

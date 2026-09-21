@@ -1,14 +1,7 @@
 {
- "stand": "2026-08-14 11:10",
+ "stand": "2026-09-21 20:50",
  "quelle": "https://www.vereinonline.org/WJ_UlmNeuUlm/kalender.ics",
  "termine": [
-  {
-   "titel": "gemeinsamer Stammtisch mit WJ Bodensee Oberschwaben im PEDI",
-   "datum": "2026-09-03",
-   "zeit": "19:00",
-   "ort": "Pedi Restaurant & Vinothek: Pfluggasse 7, 88400 Biberach an der Riß, Germany",
-   "url": "https://www.vereinonline.org/WJ_UlmNeuUlm/?veranstaltung=128312"
-  },
   {
    "titel": "Werksbesichtigung SCHWENK Zement GmbH & Co. KG",
    "datum": "2026-10-07",
@@ -17,18 +10,18 @@
    "url": "https://www.vereinonline.org/WJ_UlmNeuUlm/?veranstaltung=129003"
   },
   {
-   "titel": "Stammtisch Oktober",
+   "titel": "Stammtisch im Wilder Mann",
    "datum": "2026-10-08",
    "zeit": "19:00",
-   "ort": "",
+   "ort": "Wilder Mann: Fischergasse 2, 89073 Ulm",
    "url": "https://www.vereinonline.org/WJ_UlmNeuUlm/?veranstaltung=128313"
   },
   {
-   "titel": "Blocker - Betriebsbesichtigung Gerstlauer",
-   "datum": "2026-10-19",
-   "zeit": "17:00",
-   "ort": "Vöhringen",
-   "url": "https://www.vereinonline.org/WJ_UlmNeuUlm/?veranstaltung=129263"
+   "titel": "\"Macher statt Meckerer – warum wir Unternehmertum in den Medien wieder positiv besetzten müssen\" mit Julia Ruhs",
+   "datum": "2026-10-29",
+   "zeit": "19:30",
+   "ort": "IHK Ulm, Olgastraße 95-101, 89073 Ulm",
+   "url": "https://www.vereinonline.org/WJ_UlmNeuUlm/?veranstaltung=129226"
   },
   {
    "titel": "Stammtisch November",

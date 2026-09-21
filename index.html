@@ -252,7 +252,11 @@
     .tdate .m { font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--teal); margin-top: 2px; }
     .tmeta { font-size: 11px; color: var(--muted); margin-top: 1px;
              overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    #termine-stand { font-size: 9px; color: var(--gray); text-align: right; margin: 5px 2px 0; }
+    #termine-stand { font-size: 9px; color: var(--gray); text-align: right; margin: 0; }
+    .termine-fuss { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 6px 2px 0; }
+    .termine-abo { font-size: 11px; font-weight: 700; color: var(--teal); text-decoration: none; }
+    .lrow.is-abgesagt { opacity: 0.55; }
+    .lrow.is-abgesagt .ltext b { text-decoration: line-through; }
     /* ── FOOTER TAG ── */
     .footer-tag {
       text-align: center;
@@ -344,7 +348,10 @@
     <div id="termine-sec">
       <div class="slabel">Nächste Termine</div>
       <div class="lcard" id="termine-liste"></div>
-      <div id="termine-stand"></div>
+      <div class="termine-fuss">
+        <a class="termine-abo" href="webcal://www.vereinonline.org/WJ_UlmNeuUlm/kalender.ics">+ Termine im Handy-Kalender abonnieren</a>
+        <div id="termine-stand"></div>
+      </div>
     </div>
 
     <!-- Schnellzugriff -->
@@ -574,16 +581,21 @@
     function zeile(ev) {
       var d = new Date(ev.datum + 'T12:00:00');
       if (isNaN(d)) return '';
+      var bis = ev.bis ? new Date(ev.bis + 'T12:00:00') : null;
       var meta = [TAGE[d.getDay()]];
+      if (bis && !isNaN(bis)) {
+        // mehrtaegig: "Fr – So 4. Jul"
+        meta = [TAGE[d.getDay()] + ' – ' + TAGE[bis.getDay()] + ' ' + bis.getDate() + '. ' + MONATE[bis.getMonth()]];
+      }
       if (ev.zeit) meta.push(ev.zeit + ' Uhr');
       if (ev.ort)  meta.push(String(ev.ort).split(':')[0].split(',')[0]);
       var href = ev.url || 'https://www.vereinonline.org/WJ_UlmNeuUlm/kalender';
-      return '<a class="lrow" href="' + esc(href) + '" target="_blank" rel="noopener">' +
+      return '<a class="lrow' + (ev.abgesagt ? ' is-abgesagt' : '') + '" href="' + esc(href) + '" target="_blank" rel="noopener">' +
                '<div class="tdate"><div class="d">' + d.getDate() + '</div>' +
                '<div class="m">' + MONATE[d.getMonth()] + '</div></div>' +
                '<div class="ltext"><b>' + esc(ev.titel) + '</b>' +
                '<div class="tmeta">' + esc(meta.join(' · ')) + '</div></div>' +
-               chevron() +
+               (ev.abgesagt ? '<span class="lbadge">Abgesagt</span>' : chevron()) +
              '</a>';
     }
 
@@ -592,7 +604,7 @@
       .then(function (data) {
         var heute = new Date(); heute.setHours(0, 0, 0, 0);
         var liste = (data.termine || []).filter(function (e) {
-          var d = new Date(e.datum + 'T23:59:59');
+          var d = new Date((e.bis || e.datum) + 'T23:59:59');   // mehrtaegig: bis zum letzten Tag zeigen
           return !isNaN(d) && d >= heute;
         }).slice(0, ANZAHL);
         if (!liste.length) return;
