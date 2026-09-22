@@ -12,7 +12,7 @@
  * Cache-Name unveraendert blieb.
  */
 
-const VERSION = 'wj-ulm-v3';
+const VERSION = 'wj-ulm-v4';
 const CORE = VERSION + '-core';
 const RUNTIME = VERSION + '-runtime';
 
