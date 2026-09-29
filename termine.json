@@ -1,5 +1,5 @@
 {
- "stand": "2026-09-28 23:13",
+ "stand": "2026-09-30 00:15",
  "quelle": "https://www.vereinonline.org/WJ_UlmNeuUlm/kalender.ics",
  "termine": [
   {
@@ -43,6 +43,13 @@
    "zeit": "19:00",
    "ort": "",
    "url": "https://www.vereinonline.org/WJ_UlmNeuUlm/?veranstaltung=128315"
+  },
+  {
+   "titel": "Christbaumschlagen",
+   "datum": "2026-12-20",
+   "zeit": "",
+   "ort": "",
+   "url": "https://www.vereinonline.org/WJ_UlmNeuUlm/?veranstaltung=129227"
   },
   {
    "titel": "Stammtisch Januar (1 Woche weiter wg Ferien)",
