@@ -12,9 +12,15 @@
  * Cache-Name unveraendert blieb.
  */
 
-const VERSION = 'wj-ulm-v4';
-const CORE = VERSION + '-core';
-const RUNTIME = VERSION + '-runtime';
+// Alle Mini-Apps liegen auf derselben Herkunft (mvonulmerbach-ship-it.github.io)
+// und teilen sich EINEN Cache-Speicher. Darum tragen die Cache-Namen das
+// Praefix "wj-ulm-app::" und beim Aktivieren werden nur eigene Caches
+// geloescht -- niemals die anderer Apps. "::" als Trenner, damit ein
+// Praefix nie den Namen einer anderen App mit gleichem Anfang trifft.
+const PRAEFIX = 'wj-ulm-app::';
+const ALT_PRAEFIXE = ['wj-ulm-v'];   // fruehere Cache-Namen (wj-ulm-v4-core ...)
+const CORE = PRAEFIX + 'core-v5';
+const RUNTIME = PRAEFIX + 'runtime-v5';
 
 const PRECACHE = [
   './',
@@ -39,7 +45,10 @@ self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys()
       .then(keys => Promise.all(
-        keys.filter(k => k !== CORE && k !== RUNTIME).map(k => caches.delete(k))
+        keys
+          .filter(k => (k.startsWith(PRAEFIX) && k !== CORE && k !== RUNTIME) ||
+                       ALT_PRAEFIXE.some(a => k.startsWith(a)))
+          .map(k => caches.delete(k))
       ))
       .then(() => self.clients.claim())
   );
@@ -64,7 +73,7 @@ async function networkFirst(request, cacheName) {
     if (cached) return cached;
     // Offline und nichts im Cache: bei Navigationen die Startseite zeigen
     if (request.mode === 'navigate') {
-      const fallback = await caches.match('./index.html');
+      const fallback = await (await caches.open(CORE)).match('./index.html');
       if (fallback) return fallback;
     }
     throw err;
@@ -72,9 +81,10 @@ async function networkFirst(request, cacheName) {
 }
 
 async function cacheFirst(request, cacheName) {
-  const cached = await caches.match(request);
-  if (cached) return cached;
+  // nur im eigenen Cache suchen -- caches.match wuerde alle Apps durchsuchen
   const cache = await caches.open(cacheName);
+  const cached = await cache.match(request);
+  if (cached) return cached;
   const fresh = await fetch(request);
   if (fresh && fresh.ok) cache.put(request, fresh.clone());
   return fresh;
@@ -93,10 +103,11 @@ self.addEventListener('fetch', event => {
   const request = event.request;
   if (request.method !== 'GET') return;
 
-  const url = new URL(request.url);
+  // Nur Dateien dieser App: fremde Hosts (vereinonline, wjd.de, Google Maps ...)
+  // und die anderen Apps auf derselben Herkunft nie anfassen
+  if (!request.url.startsWith(self.registration.scope)) return;
 
-  // Fremde Hosts (vereinonline, wjd.de, Google Maps ...) nie anfassen
-  if (url.origin !== self.location.origin) return;
+  const url = new URL(request.url);
 
   if (request.mode === 'navigate' || url.pathname.endsWith('/index.html')) {
     event.respondWith(networkFirst(request, CORE));
