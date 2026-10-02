@@ -19,8 +19,8 @@
 // Praefix nie den Namen einer anderen App mit gleichem Anfang trifft.
 const PRAEFIX = 'wj-ulm-app::';
 const ALT_PRAEFIXE = ['wj-ulm-v'];   // fruehere Cache-Namen (wj-ulm-v4-core ...)
-const CORE = PRAEFIX + 'core-v6';
-const RUNTIME = PRAEFIX + 'runtime-v6';
+const CORE = PRAEFIX + 'core-v7';
+const RUNTIME = PRAEFIX + 'runtime-v7';
 
 const PRECACHE = [
   './',

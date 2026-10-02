@@ -255,7 +255,6 @@
              overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     #termine-stand { font-size: 9px; color: var(--gray); text-align: right; margin: 0; }
     .termine-fuss { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 6px 2px 0; }
-    .termine-abo { font-size: 11px; font-weight: 700; color: var(--teal); text-decoration: none; }
     .lrow.is-abgesagt { opacity: 0.55; }
     .lrow.is-abgesagt .ltext b { text-decoration: line-through; }
     /* ── FOOTER TAG ── */
@@ -319,7 +318,7 @@
 
     /* ── 02.10.2026 (Mini-App-Ueberarbeitung S7) ──
        Schrift >= 12 px und Kontrast >= 4,5:1 in hell und dunkel (Befund 3),
-       Kalender-Abo als Knopf (Befund 2), Inhalt am Desktop auf 580 px (Befund 5). */
+       Kalender-Abo entfernt (Max 02.10.2026), Inhalt am Desktop auf 580 px (Befund 5). */
     #hdr-sub, .slabel, .tile-sub, .ltext span, .tmeta, #termine-stand, .footer-tag { font-size: 12px; }
     .lbadge { font-size: 12px; color: #C0262D; }
     html[data-theme='dark'] .lbadge { color: #FFA39C; }
@@ -328,12 +327,7 @@
     #termine-stand, .footer-tag { color: var(--muted); }
     .footer-tag span { color: #14785C; }
     html[data-theme='dark'] .footer-tag span { color: var(--teal); }
-    .termine-fuss { flex-wrap: wrap; }
-    .termine-abo {
-      display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px;
-      font-family: 'Chivo', sans-serif; font-size: 13px; font-weight: 700;
-      color: var(--blue); background: var(--teal); border-radius: 22px;
-    }
+    .termine-fuss { justify-content: flex-end; }
     #scroll {
       padding-left: max(16px, calc((100% - 580px) / 2));
       padding-right: max(16px, calc((100% - 580px) / 2));
@@ -379,7 +373,6 @@
       <div class="slabel">Nächste Termine</div>
       <div class="lcard" id="termine-liste"></div>
       <div class="termine-fuss">
-        <a class="termine-abo" href="webcal://www.vereinonline.org/WJ_UlmNeuUlm/kalender.ics">+ Termine im Handy-Kalender abonnieren</a>
         <div id="termine-stand"></div>
       </div>
     </div>
