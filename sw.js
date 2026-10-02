@@ -19,8 +19,8 @@
 // Praefix nie den Namen einer anderen App mit gleichem Anfang trifft.
 const PRAEFIX = 'wj-ulm-app::';
 const ALT_PRAEFIXE = ['wj-ulm-v'];   // fruehere Cache-Namen (wj-ulm-v4-core ...)
-const CORE = PRAEFIX + 'core-v5';
-const RUNTIME = PRAEFIX + 'runtime-v5';
+const CORE = PRAEFIX + 'core-v6';
+const RUNTIME = PRAEFIX + 'runtime-v6';
 
 const PRECACHE = [
   './',
@@ -36,7 +36,9 @@ self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CORE)
       // einzeln, damit eine fehlende Datei nicht die ganze Installation kippt
-      .then(cache => Promise.all(PRECACHE.map(u => cache.add(u).catch(() => null))))
+      // cache:'reload': am HTTP-Cache des Browsers vorbei - sonst landet nach einem Update
+      // eine noch frische alte index.html im neuen Cache (gemessen 02.10.2026)
+      .then(cache => Promise.all(PRECACHE.map(u => cache.add(new Request(u, { cache: 'reload' })).catch(() => null))))
       .then(() => self.skipWaiting())
   );
 });
