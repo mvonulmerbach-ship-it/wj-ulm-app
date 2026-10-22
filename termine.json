@@ -1,5 +1,5 @@
 {
- "stand": "2026-10-22 06:45",
+ "stand": "2026-10-22 19:10",
  "quelle": "https://www.vereinonline.org/WJ_UlmNeuUlm/kalender.ics",
  "termine": [
   {
@@ -15,6 +15,13 @@
    "zeit": "19:00",
    "ort": "",
    "url": "https://www.vereinonline.org/WJ_UlmNeuUlm/?veranstaltung=128314"
+  },
+  {
+   "titel": "Betriebsbesichtigung IKEA Ulm mit den WJ Bodensee-Oberschwaben",
+   "datum": "2026-11-16",
+   "zeit": "",
+   "ort": "",
+   "url": "https://www.vereinonline.org/WJ_UlmNeuUlm/?veranstaltung=129785"
   },
   {
    "titel": "WJ Ulm / Neu-Ulm Gansessen",
